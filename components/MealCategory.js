@@ -59,7 +59,9 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         paddingHorizontal: 10,
         justifyContent: 'space-between',
-        backgroundColor: "#ccc"
+        borderLeftWidth: 2,
+        borderRightWidth: 2,
+        borderBottomWidth: 2,
     },
     basicInfoText: {
         fontFamily: FontFamilies.openSansBold,

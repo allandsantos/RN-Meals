@@ -12,8 +12,13 @@ const defaultStackNavOptions = {
         backgroundColor: Colors.mainApp,
     },
     headerTitleStyle:{
-        fontFamily: FontFamilies.openSansBold
+        fontFamily: FontFamilies.openSansBold,
     },
+    headerTitleContainerStyle: {
+      width: '70%',
+      alignItems: 'center',
+    },
+    headerTitleAlign: 'center',
     headerBackTitleStyle:{
         FontFamilies: FontFamilies.openSansBold
     },

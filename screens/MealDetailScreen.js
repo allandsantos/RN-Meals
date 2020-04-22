@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useCallback } from 'react'
 import { StyleSheet, Text, View, Image } from 'react-native'
 import { MEALS } from '../data/dummy-data';
 import HeaderButton from '../components/HeaderButton';
@@ -7,10 +7,32 @@ import { ScrollView } from 'react-native-gesture-handler';
 import FontFamilies from '../constants/FontFamilies';
 import Colors from '../constants/Colors';
 
+import {useSelector, useDispatch} from 'react-redux';
+import { toggleFavorite } from '../store/actions/meals';
+
 const MealDetailScreen = (props) => {
 
+    const Meals = useSelector(state=> state.meals.meals);
+
     const mealId = props.navigation.getParam('mealId');
-    const selectedMeal = MEALS.find(meal => meal.id === mealId);
+    const selectedMeal = Meals.find(meal => meal.id === mealId);
+
+    const favoriteMeals = useSelector(state=> state.meals.favoriteMeals);
+    const isFavorite = favoriteMeals.findIndex(meal=> meal.id === mealId) >= 0;
+
+    const dispatch = useDispatch();
+
+    const toggleFavoriteHandler = useCallback(() =>{
+        dispatch(toggleFavorite(mealId));
+    }, [dispatch, mealId]); 
+
+    useEffect(() => {
+        props.navigation.setParams({toggleFav: toggleFavoriteHandler})
+    }, [toggleFavoriteHandler]);
+
+    useEffect(() =>{
+        props.navigation.setParams({isFavorite})
+    },[isFavorite]);
 
     return (
         <ScrollView style={styles.screen}>
@@ -24,16 +46,16 @@ const MealDetailScreen = (props) => {
                 <View>
                     <Text style={styles.subTitle}>Ingredients</Text>
                     {selectedMeal.ingredients.map(ing => (
-                        <View style={styles.ingredientsContainer}>
-                            <Text key={ing} style={styles.ingredientsText}>{ing}</Text>
+                        <View key={ing} style={styles.ingredientsContainer}>
+                            <Text style={styles.ingredientsText}>{ing}</Text>
                         </View>
                     ))}
                 </View>
                 <View>
                     <Text style={styles.subTitle}>Steps</Text>
                     {selectedMeal.steps.map(stp => (
-                        <View style={styles.ingredientsContainer}>
-                            <Text key={stp} style={styles.ingredientsText}>{stp}</Text>
+                        <View key={stp} style={styles.ingredientsContainer}>
+                            <Text style={styles.ingredientsText}>{stp}</Text>
                         </View>
                     ))}
                 </View>
@@ -43,14 +65,14 @@ const MealDetailScreen = (props) => {
 }
 
 MealDetailScreen.navigationOptions = (navigationData) => {
-    const mealId = navigationData.navigation.getParam('mealId');
-    const selectedMeal = MEALS.find(meal => meal.id === mealId);
+    const toggleFavorite= navigationData.navigation.getParam('toggleFav');
+    const isFavorite = navigationData.navigation.getParam('isFavorite');
+    const mealTitle = navigationData.navigation.getParam('mealTitle');
+    
     return {
-        headerTitle: selectedMeal.title,
+        headerTitle: mealTitle,
         headerRight: (<HeaderButtons HeaderButtonComponent={HeaderButton}>
-            <Item title="Favorite" iconName="ios-star-outline" onPress={() => {
-                console.log("FAVORITADOOOOO")
-            }} />
+            <Item title="Favorite" iconName={isFavorite ? "ios-star" : "ios-star-outline"} onPress={toggleFavorite} />
         </HeaderButtons>)
     };
 }
@@ -101,7 +123,4 @@ const styles = StyleSheet.create({
         textTransform: 'capitalize',
         textAlign: 'justify',
     },
-    stepsText: {
-
-    }
 })
