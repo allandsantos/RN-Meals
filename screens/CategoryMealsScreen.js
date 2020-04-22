@@ -1,25 +1,14 @@
 import React from 'react'
-import { StyleSheet, Text, View, Button, FlatList } from 'react-native'
-import Colors from '../constants/Colors'
-
 import { CATEGORIES, MEALS } from '../data/dummy-data';
-
-import MealCategory from '../components/MealCategory';
+import MealList from '../components/MealList';
 
 const CategoryMealsScreen = (props) => {
 
     const catId = props.navigation.getParam('categoryId');
     const categoryMeals = MEALS.filter(meal => meal.categoryIds.indexOf(catId) >= 0);
-
-    const renderMeals = (meal) =>{
-        <MealCategory meal={meal}/>
-    }
-
+    
     return (
-        <FlatList 
-        data={categoryMeals}
-        renderItem={(itemData) => renderMeals({itemData})}
-        />
+        <MealList categoryMeals={categoryMeals} navigation={props.navigation}/>
     );
 };
 
@@ -37,10 +26,3 @@ CategoryMealsScreen.navigationOptions = (navigationData) => {
 
 
 export default CategoryMealsScreen
-
-const styles = StyleSheet.create({
-    screen: {
-        flex: 1,
-        alignItems: 'center'
-    }
-})

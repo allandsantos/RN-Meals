@@ -1,16 +1,14 @@
 import React from 'react'
 import { StyleSheet, Dimensions, FlatList } from 'react-native'
-
-import Colors from '../constants/Colors';
 import { CATEGORIES } from '../data/dummy-data';
 import CategoryGridTile from '../components/CategoryGridTile';
+import DrawerMenu from '../components/DrawerMenu';
 
 const {width: WIDTH, height: HEIGHT} = Dimensions.get('window');
 
 const CategoriesScreen = (props) => {
 
     const renderGridItem = (category) => {
-        console.log(category);
         return (
             <CategoryGridTile 
             title={category.title}
@@ -37,9 +35,12 @@ const CategoriesScreen = (props) => {
     );
 };
 
-CategoriesScreen.navigationOptions = {
-    headerTitle: 'Meal Categories',
-};
+CategoriesScreen.navigationOptions = navData => {
+    return {
+        headerTitle: 'Meal Categories',
+        headerLeft: <DrawerMenu navData={navData}/>
+    };
+}
 
 export default CategoriesScreen
 
